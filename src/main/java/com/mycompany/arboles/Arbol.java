@@ -4,15 +4,20 @@
  */
 package com.mycompany.arboles;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  *
  * @author willi
  */
 public class Arbol {
     private NodoArbol raiz;
+    private long Inicio_Ejecucion; 
     
     public Arbol (){
         this.raiz = null;
+        this.Inicio_Ejecucion = System.nanoTime();
     }
     
     public boolean Vacio(){
@@ -53,24 +58,126 @@ public class Arbol {
     }
     
     public void preOrden(){
-        preOrden(raiz);
+        
+        preOrden(-1, raiz);
     }
     
-    private void preOrden(NodoArbol raiz){
+    public void preOrden(int codigo){
+        System.out.println("Comienza la busqueda: ");
+        Inicio_Ejecucion = System.nanoTime();
+        preOrden(codigo, raiz);
+
+    }
+    
+    private void preOrden(int codigo, NodoArbol raiz){
         if (raiz == null){
             return;
         } 
         
-        System.out.println(raiz.getEmpleado());
+        if (codigo == -1){
+            System.out.println(raiz.getEmpleado());
+        }
+        ComprobarBusqueda(raiz, codigo);
         
-        preOrden(raiz.getHijoIzq());
-        preOrden(raiz.getHijoDer());
-        
-        
-        
-        
+        preOrden(codigo, raiz.getHijoIzq());
+        preOrden(codigo, raiz.getHijoDer());
+
+    }
+    
+    public void inOrden(){
+        inOrden(-1, raiz);
+    }
+    
+    public void inOrden(int codigo){
+        inOrden(codigo, raiz);
+        System.out.println("Comienza la busqueda: ");
+        Inicio_Ejecucion = System.nanoTime();
         
     }
+    
+    private void inOrden(int codigo, NodoArbol raiz){
+        if(raiz == null){
+            return;
+        }
+        
+        inOrden(codigo, raiz.getHijoIzq());
+        if(codigo == -1){
+            System.out.println(raiz.getEmpleado());
+        }
+        ComprobarBusqueda(raiz,codigo);
+        inOrden(codigo, raiz.getHijoDer());
+    
+    }
+    
+    public void postOrden(){
+        postOrden(-1, raiz);
+    }
+    
+    public void postOrden(int codigo){
+        postOrden(codigo, raiz);
+        System.out.println("Comienza la busqueda: ");
+        Inicio_Ejecucion = System.nanoTime();
+    }
+    
+    private void postOrden(int codigo, NodoArbol raiz){
+        if(raiz == null){
+            return;
+        }
+        
+        inOrden(codigo, raiz.getHijoIzq());
+        inOrden(codigo, raiz.getHijoDer());
+        if(codigo == -1){
+            System.out.println(raiz.getEmpleado());
+        }
+        ComprobarBusqueda(raiz,codigo);
+    }
+    
+    public void Anchura(){
+        Anchura(-1, raiz);
+    }
+    
+    public void Anchura(int codigo){
+        Anchura(codigo, raiz);
+    }
+    
+    private void Anchura(int codigo, NodoArbol raiz){
+        if(raiz == null){
+            return; 
+        }
+        
+        Queue<NodoArbol> cola = new LinkedList<>(); 
+        cola.add(raiz);
+        
+        while(!cola.isEmpty()){
+            NodoArbol nodo = cola.poll();
+            if(codigo == -1){
+                System.out.println(nodo.getEmpleado());
+            } else {
+                ComprobarBusqueda(nodo, codigo);
+            }
+            
+            if(nodo.getHijoIzq() != null){
+                cola.add(nodo.getHijoIzq());
+            }
+            if(nodo.getHijoDer() != null){
+                cola.add(nodo.getHijoDer());
+            }
+        }
+        
+    }
+    
+    private void ComprobarBusqueda(NodoArbol empleado, int codigo){
+
+        if (empleado.getEmpleado().getCodigo() == codigo){
+            System.out.println("Empleado encontrado: ");
+            final long TiempoFinal = System.nanoTime();
+            System.out.println(empleado.getEmpleado());
+            double tiempo = (double)(TiempoFinal - Inicio_Ejecucion)/1000000;
+            System.out.println("Encontrado en: " + tiempo + "ms" );
+        }
+    
+    }
+    
     
 }
  
